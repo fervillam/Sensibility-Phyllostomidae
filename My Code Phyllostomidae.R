@@ -368,3 +368,12 @@ plot(Primates.Tree)
     } else{Vec.Down.Nost.Bin.ARD[4] <- 2}  
     
   # Multistate matrix: Equal Rates
+  
+    # Rhinarium
+  
+    if(any(between(Mult.Anc.Rec.ER.Nodes, 0.31, 0.35)) == "TRUE"){
+      if(any(between(Mult.Anc.Rec.ER.Nodes[1, ], 0.31, 0.35)) == "TRUE"){
+        Vec.Mult.ER <- ("1, 2, 3")
+      }
+    }
+  
