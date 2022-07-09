@@ -175,205 +175,48 @@ plot(Primates.Tree)
   
 # Discretization of ML ancestral reconstruction values
   
+  # IMPORTANT: if the difference between likelihoods at a certain node is equal #
+  # or less than 0.1, both states will be considered equiprobable #
+  
+  DiscAceStat <- function(Node, Tolerance.Limit = 0.01){
+    
+    Node.Ratio <- Nodo/max(Node) 
+    limit <- 1 - Tolerance.Limit/max(Node)
+    Condition <- Node.Ratio >= limit
+    Discrete <- paste(names(which(Condition == "TRUE")), collapse = "")
+    return(Discrete)
+  }
+  
   # Binary matrices: Equal Rates
   
     # Rhinarium
   
-    # IMPORTANT: if the difference between likelihoods at a certain node is equal #
-    # or less than 0.1, both states will be considered equiprobable #
-  
-    if(any(between(Rhinarium.Anc.Rec.ER.Nodes, 0.49, 0.51) == "TRUE")){
-      if(any(between(Flat.Nost.Anc.Rec.ER.Nodes, 0.49, 0.51) == "TRUE")){
-        if(any(between(Flat.Nost.Anc.Rec.ER.Nodes[1, ], 0.49, 0.51)) == "TRUE"){
-          Vec.Flat.Nost.Bin.ER <- ("1, 2")}  
-          if(any(between(Flat.Nost.Anc.Rec.ER.Nodes[2, ], 0.49, 0.51)) == "TRUE"){
-            Vec.Flat.Nost.Bin.ER[2] <- ("1, 2")}
-            if(any(between(Flat.Nost.Anc.Rec.ER.Nodes[3, ], 0.49, 0.51)) == "TRUE"){
-              Vec.Flat.Nost.Bin.ER[3] <- ("1, 2")}
-              if(any(between(Flat.Nost.Anc.Rec.ER.Nodes[4, ], 0.49, 0.51)) == "TRUE"){
-                Vec.Flat.Nost.Bin.ER[4] <- ("1, 2")}
-    }
-      } else{
-      if(Rhinarium.Anc.Rec.ER.Nodes[1, 1] > Rhinarium.Anc.Rec.ER.Nodes[2, 1]){
-        Vec.Rhinarium.Bin.ER <- (1)
-      } else{Vec.Rhinarium.Bin.ER <- (2)}
-    }
-      
-    if(Rhinarium.Anc.Rec.ER.Nodes[2, 1] > Rhinarium.Anc.Rec.ER.Nodes[2, 2]){
-      Vec.Rhinarium.Bin.ER[2] <- 1
-    } else{Vec.Rhinarium.Bin.ER[2] <- 2}
-  
-    if(Rhinarium.Anc.Rec.ER.Nodes[3, 1] > Rhinarium.Anc.Rec.ER.Nodes[3,2]){
-      Vec.Rhinarium.Bin.ER[3] <- 1
-    } else{Vec.Rhinarium.Bin.ER[3] <- 2}
-  
-    if(Rhinarium.Anc.Rec.ER.Nodes[4, 1] > Rhinarium.Anc.Rec.ER.Nodes[4, 1]){
-      Vec.Rhinarium.Bin.ER[4] <- 1
-    } else{Vec.Rhinarium.Bin.ER[4] <- 2}
-  
+    apply(Rhinarium.Anc.Rec.ER.Root, 1, DiscAceStat)
+    
     # Flat nostrils
       
-    if(any(between(Flat.Nost.Anc.Rec.ER.Nodes, 0.49, 0.51) == "TRUE")){
-      if(any(between(Flat.Nost.Anc.Rec.ER.Nodes[1, ], 0.49, 0.51)) == "TRUE"){
-        Vec.Flat.Nost.Bin.ER <- ("1, 2")}  
-        if(any(between(Flat.Nost.Anc.Rec.ER.Nodes[2, ], 0.49, 0.51)) == "TRUE"){
-          Vec.Flat.Nost.Bin.ER[2] <- ("1, 2")}
-          if(any(between(Flat.Nost.Anc.Rec.ER.Nodes[3, ], 0.49, 0.51)) == "TRUE"){
-            Vec.Flat.Nost.Bin.ER[3] <- ("1, 2")}
-              if(any(between(Flat.Nost.Anc.Rec.ER.Nodes[4, ], 0.49, 0.51)) == "TRUE"){
-                Vec.Flat.Nost.Bin.ER[4] <- ("1, 2")}
-      } else{
-      if(Flat.Nost.Anc.Rec.ER.Nodes[1, 1] > Flat.Nost.Anc.Rec.ER.Nodes[2, 1]){
-        Vec.Flat.Nost.Bin.ER <- (1)
-      } else{Vec.Flat.Nost.Bin.ER <- (2)}
-    }
-    
-    if(Flat.Nost.Anc.Rec.ER.Nodes[2, 1] > Flat.Nost.Anc.Rec.ER.Nodes[2, 2]){
-      Vec.Flat.Nost.Bin.ER[2] <- 1
-    } else{Vec.Flat.Nost.Bin.ER[2] <- 2}
-    
-    if(Flat.Nost.Anc.Rec.ER.Nodes[3, 1] > Flat.Nost.Anc.Rec.ER.Nodes[3,2]){
-      Vec.Flat.Nost.Bin.ER[3] <- 1
-    } else{Vec.Flat.Nost.Bin.ER[3] <- 2}
-    
-    if(Flat.Nost.Anc.Rec.ER.Nodes[4, 1] > Flat.Nost.Anc.Rec.ER.Nodes[4, 1]){
-      Vec.Flat.Nost.Bin.ER[4] <- 1
-    } else{Vec.Flat.Nost.Bin.ER[4] <- 2}  
+    apply(Flat.Nost.Anc.Rec.ER.Nodes, 1, DiscAceStat)
         
     # Downward nostrils
   
-  if(any(between(Down.Nost.Anc.Rec.ER.Nodes, 0.49, 0.51) == "TRUE")){
-      if(any(between(Down.Nost.Anc.Rec.ER.Nodes[1, ], 0.49, 0.51)) == "TRUE"){
-        Vec.Down.Nost.Bin.ER <- ("1, 2")}  
-        if(any(between(Down.Nost.Anc.Rec.ER.Nodes[2, ], 0.49, 0.51)) == "TRUE"){
-          Vec.Down.Nost.Bin.ER[2] <- ("1, 2")}
-          if(any(between(Down.Nost.Anc.Rec.ER.Nodes[3, ], 0.49, 0.51)) == "TRUE"){
-            Vec.Down.Nost.Bin.ER[3] <- ("1, 2")}
-            if(any(between(Down.Nost.Anc.Rec.ER.Nodes[4, ], 0.49, 0.51)) == "TRUE"){
-              Vec.Down.Nost.Bin.ER[4] <- ("1, 2")}
-      
-    } else{
-      if(Down.Nost.Anc.Rec.ER.Nodes[1, 1] > Down.Nost.Anc.Rec.ER.Nodes[2, 1]){
-        Vec.Down.Nost.Bin.ER <- (1)
-      } else{Vec.Down.Nost.Bin.ER <- (2)}
-    }
+    apply(Down.Nost.Anc.Rec.ER.Root, 1, DiscAceStat)  
     
-    if(Down.Nost.Anc.Rec.ER.Nodes[2, 1] > Down.Nost.Anc.Rec.ER.Nodes[2, 2]){
-      Vec.Down.Nost.Bin.ER[2] <- 1
-    } else{Vec.Down.Nost.Bin.ER[2] <- 2}
-    
-    if(Down.Nost.Anc.Rec.ER.Nodes[3, 1] > Down.Nost.Anc.Rec.ER.Nodes[3,2]){
-      Vec.Down.Nost.Bin.ER[3] <- 1
-    } else{Vec.Down.Nost.Bin.ER[3] <- 2}
-    
-    if(Down.Nost.Anc.Rec.ER.Nodes[4, 1] > Down.Nost.Anc.Rec.ER.Nodes[4, 1]){
-      Vec.Down.Nost.Bin.ER[4] <- 1
-    } else{Vec.Down.Nost.Bin.ER[4] <- 2}  
-      
   # Binary matrices: Unequal Rates
   
     # Rhinarium
     
-    if(any(between(Rhinarium.Anc.Rec.ARD.Nodes, 0.49, 0.51) == "TRUE")){
-      if(any(between(Rhinarium.Anc.Rec.ARD.Nodes, 0.49, 0.51) == "TRUE")){
-        if(any(between(Rhinarium.Anc.Rec.ARD.Nodes[1, ], 0.49, 0.51)) == "TRUE"){
-          Vec.Flat.Nost.Bin.ER <- ("1, 2")}  
-          if(any(between(Rhinarium.Anc.Rec.ARD.Nodes[2, ], 0.49, 0.51)) == "TRUE"){
-            Vec.Flat.Nost.Bin.ER[2] <- ("1, 2")}
-            if(any(between(Rhinarium.Anc.Rec.ARD.Nodes[3, ], 0.49, 0.51)) == "TRUE"){
-              Vec.Flat.Nost.Bin.ER[3] <- ("1, 2")}
-              if(any(between(Rhinarium.Anc.Rec.ARD.Nodes[4, ], 0.49, 0.51)) == "TRUE"){
-                Vec.Flat.Nost.Bin.ER[4] <- ("1, 2")}
-    } 
-      }else{
-      if(Rhinarium.Anc.Rec.ARD.Nodes[1, 1] > Rhinarium.Anc.Rec.ARD.Nodes[2, 1]){
-        Vec.Rhinarium.Bin.ARD <- (1)
-      } else{Vec.Rhinarium.Bin.ARD <- (2)}
-    }
-    
-    if(Rhinarium.Anc.Rec.ARD.Nodes[2, 1] > Rhinarium.Anc.Rec.ARD.Nodes[2, 2]){
-      Vec.Rhinarium.Bin.ARD[2] <- 1
-    } else{Vec.Rhinarium.Bin.ARD[2] <- 2}
-    
-    if(Rhinarium.Anc.Rec.ARD.Nodes[3, 1] > Rhinarium.Anc.Rec.ARD.Nodes[3,2]){
-      Vec.Rhinarium.Bin.ARD[3] <- 1
-    } else{Vec.Rhinarium.Bin.ARD[3] <- 2}
-    
-    if(Rhinarium.Anc.Rec.ARD.Nodes[4, 1] > Rhinarium.Anc.Rec.ARD.Nodes[4, 1]){
-      Vec.Rhinarium.Bin.ARD[4] <- 1
-    } else{Vec.Rhinarium.Bin.ARD[4] <- 2}
+    apply(Rhinarium.Anc.Rec.ARD.Nodes, 1, DiscAceStat)
     
     # Flat nostrils
     
-    if(any(between(Flat.Nost.Anc.Rec.ARD.Nodes, 0.49, 0.51) == "TRUE")){
-      if(any(between(Flat.Nost.Anc.Rec.ARD.Nodes, 0.49, 0.51) == "TRUE")){
-        if(any(between(Flat.Nost.Anc.Rec.ARD.Nodes[1, ], 0.49, 0.51)) == "TRUE"){
-          Vec.Flat.Nost.Bin.ARD <- ("1, 2")}  
-          if(any(between(Flat.Nost.Anc.Rec.ARD.Nodes[2, ], 0.49, 0.51)) == "TRUE"){
-            Vec.Flat.Nost.Bin.ARD[2] <- ("1, 2")}
-            if(any(between(Flat.Nost.Anc.Rec.ARD.Nodes[3, ], 0.49, 0.51)) == "TRUE"){
-              Vec.Flat.Nost.Bin.ARD[3] <- ("1, 2")}
-              if(any(between(Flat.Nost.Anc.Rec.ARD.Nodes[4, ], 0.49, 0.51)) == "TRUE"){
-                Vec.Flat.Nost.Bin.ARD[4] <- ("1, 2")}
-    } 
-      
-    } else{
-      if(Flat.Nost.Anc.Rec.ARD.Nodes[1, 1] > Flat.Nost.Anc.Rec.ARD.Nodes[2, 1]){
-        Vec.Flat.Nost.Bin.ARD <- (1)
-      } else{Vec.Flat.Nost.Bin.ARD <- (2)}
-    }
-    
-    if(Flat.Nost.Anc.Rec.ARD.Nodes[2, 1] > Flat.Nost.Anc.Rec.ARD.Nodes[2, 2]){
-      Vec.Flat.Nost.Bin.ARD[2] <- 1
-    } else{Vec.Flat.Nost.Bin.ARD[2] <- 2}
-    
-    if(Flat.Nost.Anc.Rec.ARD.Nodes[3, 1] > Flat.Nost.Anc.Rec.ARD.Nodes[3,2]){
-      Vec.Flat.Nost.Bin.ARD[3] <- 1
-    } else{Vec.Flat.Nost.Bin.ARD[3] <- 2}
-    
-    if(Flat.Nost.Anc.Rec.ARD.Nodes[4, 1] > Flat.Nost.Anc.Rec.ARD.Nodes[4, 1]){
-      Vec.Flat.Nost.Bin.ARD[4] <- 1
-    } else{Vec.Flat.Nost.Bin.ARD[4] <- 2}  
+    apply(Flat.Nost.Anc.Rec.ARD.Nodes, 1, DiscAceStat) 
     
     # Downward nostrils
     
-    if(any(between(Down.Nost.Anc.Rec.ARD.Nodes, 0.49, 0.51) == "TRUE")){
-      if(any(between(Down.Nost.Anc.Rec.ARD.Nodes, 0.49, 0.51) == "TRUE")){
-        if(any(between(Down.Nost.Anc.Rec.ARD.Nodes[1, ], 0.49, 0.51)) == "TRUE"){
-          Vec.Down.Nost.Bin.ARD <- ("1, 2")}  
-          if(any(between(Down.Nost.Anc.Rec.ARD.Nodes[2, ], 0.49, 0.51)) == "TRUE"){
-            Vec.Down.Nost.Bin.ARD[2] <- ("1, 2")}
-            if(any(between(Down.Nost.Anc.Rec.ARD.Nodes[3, ], 0.49, 0.51)) == "TRUE"){
-              Vec.Down.Nost.Bin.ARD[3] <- ("1, 2")}
-              if(any(between(Down.Nost.Anc.Rec.ARD.Nodes[4, ], 0.49, 0.51)) == "TRUE"){
-                Vec.Down.Nost.Bin.ARD[4] <- ("1, 2")}
-      } 
-      
-    } else{
-      if(Down.Nost.Anc.Rec.ARD.Nodes[1, 1] > Down.Nost.Anc.Rec.ARD.Nodes[2, 1]){
-        Vec.Down.Nost.Bin.ARD <- (1)
-      } else{Vec.Down.Nost.Bin.ARD <- (2)}
-    }
-    
-    if(Down.Nost.Anc.Rec.ARD.Nodes[2, 1] > Down.Nost.Anc.Rec.ARD.Nodes[2, 2]){
-      Vec.Down.Nost.Bin.ARD[2] <- 1
-    } else{Vec.Down.Nost.Bin.ARD[2] <- 2}
-    
-    if(Down.Nost.Anc.Rec.ARD.Nodes[3, 1] > Down.Nost.Anc.Rec.ARD.Nodes[3,2]){
-      Vec.Down.Nost.Bin.ARD[3] <- 1
-    } else{Vec.Down.Nost.Bin.ARD[3] <- 2}
-    
-    if(Down.Nost.Anc.Rec.ARD.Nodes[4, 1] > Down.Nost.Anc.Rec.ARD.Nodes[4, 1]){
-      Vec.Down.Nost.Bin.ARD[4] <- 1
-    } else{Vec.Down.Nost.Bin.ARD[4] <- 2}  
+    apply(Down.Nost.Anc.Rec.ARD.Nodes, 1, DiscAceStat)
     
   # Multistate matrix: Equal Rates
   
     # Rhinarium
   
-    if(any(between(Mult.Anc.Rec.ER.Nodes, 0.31, 0.35)) == "TRUE"){
-      if(any(between(Mult.Anc.Rec.ER.Nodes[1, ], 0.31, 0.35)) == "TRUE"){
-        Vec.Mult.ER <- ("1, 2, 3")
-      }
-    }
-  
+   
