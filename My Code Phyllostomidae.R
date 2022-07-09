@@ -220,3 +220,20 @@ plot(Primates.Tree)
     # Rhinarium
   
    
+# Comparation between vector states
+
+StatVecComp <- function(State.Vector.1, State.Vector.2){
+  
+  if(length(State.Vector.1) == length(StateVector2)){
+    Common.Elements <- match(State.Vector.1, State.Vector.2)
+    Number.Common.Elements <- length(Common.Elements)
+    Similarity.Percentage <- (Number.Common.Elements/length(State.Vector.1)) * 100
+
+    return(Similarity.Percentage)
+    
+  } 
+  
+  else{print("The state vectors must have the same length")}
+  
+  }
+
