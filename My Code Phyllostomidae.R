@@ -7,7 +7,7 @@ if(!require("pacman")){
 
 library(pacman)
 
-pacman::p_load(ape, castor, dplyr, phytools)
+pacman::p_load(ape, castor, phytools)
 
 # Building the example topology that will be used in the analysis. This tree
 # was taken from Paradis (2012)
@@ -180,60 +180,77 @@ plot(Primates.Tree)
   
   DiscAceStat <- function(Node, Tolerance.Limit = 0.01){
     
-    Node.Ratio <- Nodo/max(Node) 
+    Node.Ratio <- Node/max(Node) 
     limit <- 1 - Tolerance.Limit/max(Node)
     Condition <- Node.Ratio >= limit
-    Discrete <- paste(names(which(Condition == "TRUE")), collapse = "")
-    return(Discrete)
+    Discrete <- paste(names(which(Condition == "TRUE")))
+    Mult.Discrete <- paste(names(which(Condition == "TRUE")), collapse = "")
+    
+    
+    if(length(Discrete) == 1){
+      return(Discrete)
+    } else{
+      return(Mult.Discrete)
+    }
   }
   
   # Binary matrices: Equal Rates
   
     # Rhinarium
   
-    apply(Rhinarium.Anc.Rec.ER.Root, 1, DiscAceStat)
+    State.Vector.Rhin.ER.ML <- apply(Rhinarium.Anc.Rec.ER.Nodes, 1, DiscAceStat)
     
     # Flat nostrils
       
-    apply(Flat.Nost.Anc.Rec.ER.Nodes, 1, DiscAceStat)
+    State.Vector.Flat.ER.ML <- apply(Flat.Nost.Anc.Rec.ER.Nodes, 1, DiscAceStat)
         
     # Downward nostrils
   
-    apply(Down.Nost.Anc.Rec.ER.Root, 1, DiscAceStat)  
+    State.Vector.Down.ER.ML <- apply(Down.Nost.Anc.Rec.ER.Nodes, 1, DiscAceStat)  
     
   # Binary matrices: Unequal Rates
   
     # Rhinarium
     
-    apply(Rhinarium.Anc.Rec.ARD.Nodes, 1, DiscAceStat)
+    State.Vector.Rhin.UR.ML <- apply(Rhinarium.Anc.Rec.ARD.Nodes, 1, DiscAceStat)
     
     # Flat nostrils
     
-    apply(Flat.Nost.Anc.Rec.ARD.Nodes, 1, DiscAceStat) 
+    State.Vector.Flat.UR.ML <- apply(Flat.Nost.Anc.Rec.ARD.Nodes, 1, DiscAceStat) 
     
     # Downward nostrils
     
-    apply(Down.Nost.Anc.Rec.ARD.Nodes, 1, DiscAceStat)
+    State.Vector.Down.UR.ML <- apply(Down.Nost.Anc.Rec.ARD.Nodes, 1, DiscAceStat)
     
   # Multistate matrix: Equal Rates
   
-    # Rhinarium
+  # Multistate matrix: Unequal Rates
   
-   
-# Comparation between vector states
 
-StatVecComp <- function(State.Vector.1, State.Vector.2){
-  
-  if(length(State.Vector.1) == length(State.Vector2)){
-    Common.Elements <- match(State.Vector.1, State.Vector.2)
-    Number.Common.Elements <- length(Common.Elements)
-    Similarity.Percentage <- (Number.Common.Elements/length(State.Vector.1)) * 100
-
-    return(Similarity.Percentage)
+# Extracting state nodes from binary MP reconstructions
     
-  } 
+ParsStatVec <- function(Node){
   
-  else{print("The state vectors must have the same length")}
+  Condition <- Node != 0
+  State <- paste(names(which(Condition == "TRUE")))
+  State.Mult <- paste(names(which(Condition == "TRUE")), collapse = "")
   
+  if(length(State) == 1){
+    return(State)
+  } else{
+    return(State.Mult)
   }
-
+}
+       
+# Create a data frame using the state vectors
+    
+  State.Reconstructions <- data.frame("Equal Rates ML" = c(State.Vector.Rhin.ER.ML, 
+                                                           State.Vector.Flat.ER.ML,
+                                                           State.Vector.Down.ER.ML),
+                                      "Unequal Rates ML" = c(State.Vector.Rhin.UR.ML, 
+                                                             State.Vector.Flat.UR.ML,
+                                                             State.Vector.Down.UR.ML))
+  State.Reconstructions[State.Reconstructions == 1] <- "a"
+  State.Reconstructions[State.Reconstructions == 2] <- "b"
+  State.Reconstructions[State.Reconstructions == 12] <- "ab"
+  
